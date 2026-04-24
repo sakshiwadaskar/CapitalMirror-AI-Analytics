@@ -173,7 +173,7 @@ RATIONALE_PROMPT = """You are a plain-speaking business analyst. Given the follo
 
 Each point in the arrays must be a single short sentence written for a business owner. Be specific to the numbers, not generic.
 
-IMPORTANT: Use ONLY the exact numbers provided below. Do not estimate, round differently, or generate your own calculations. Every number you mention must match exactly what is provided here.
+IMPORTANT: Use ONLY the exact numbers provided below. Do not estimate, round differently, or generate your own calculations. Every number you mention must match exactly what is provided here. When referencing SDE ratio, always describe it as '% of revenue', never '% of gross profit'. When referencing expense ratio, always describe it as '% of gross profit', never '% of revenue'.
 
 Score: {score}/100
 Revenue: ${revenue:,.0f}
@@ -183,7 +183,7 @@ Operating Expenses (OpEx): ${opex:,.0f}
 Expense Ratio (OpEx/Gross Profit): {expense_ratio}
 Owner Salary: ${owner_salary:,.0f}
 SDE (Owner Earnings): ${sde:,.0f}
-SDE Ratio: {sde_ratio}
+SDE as % of Revenue: {sde_ratio}
 YoY Growth: {yoy_growth}%
 {runway_line}Notes: {notes}
 

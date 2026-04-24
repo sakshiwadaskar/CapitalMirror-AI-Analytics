@@ -98,7 +98,7 @@ export function MetricCards({ metrics, hasGrowthAssumption, industry }: Props) {
         benchmark={{ result: vsRange(metrics.sde_ratio, bm.sde_ratio), industryLabel: bm.label }}
       />
       <Card
-        label="Monthly Burn"
+        label="Monthly Costs"
         value={fmt(metrics.monthly_burn)}
         sub={`${(metrics.revenue / (metrics.cogs + metrics.operating_expenses)).toFixed(1)}× covered by revenue`}
       />
