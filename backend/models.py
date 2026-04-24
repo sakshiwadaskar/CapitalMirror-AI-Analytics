@@ -16,6 +16,7 @@ class FinancialData(BaseModel):
     sde: Optional[float] = None
     yoy_growth: Optional[float] = None  # as decimal, e.g. 0.14 for 14%
     employee_count: Optional[int] = None
+    cash_on_hand: Optional[float] = None
     notes: Optional[str] = None
     industry: Optional[str] = None
 

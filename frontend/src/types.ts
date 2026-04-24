@@ -12,6 +12,7 @@ export interface FinancialData {
   sde: number | null
   yoy_growth: number | null
   employee_count: number | null
+  cash_on_hand: number | null
   notes: string | null
   industry: string | null
 }

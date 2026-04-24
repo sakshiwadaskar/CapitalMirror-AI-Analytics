@@ -11,6 +11,7 @@ export function useHealthScore(data: FinancialData | null, assumptions: Assumpti
   const [rationaleLoading, setRationaleLoading] = useState(false)
   const [rationaleError, setRationaleError] = useState(false)
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const abortRef = useRef<AbortController | null>(null)
 
   const healthScore = useMemo<HealthScore | null>(
     () => (data ? computeHealthScore(data, assumptions) : null),
@@ -28,15 +29,18 @@ export function useHealthScore(data: FinancialData | null, assumptions: Assumpti
     if (debounceRef.current) clearTimeout(debounceRef.current)
 
     debounceRef.current = setTimeout(async () => {
+      if (abortRef.current) abortRef.current.abort()
+      abortRef.current = new AbortController()
       setRationaleLoading(true)
       setRationaleError(false)
       try {
         const { rationale: r, insights: i } = await fetchRationale(
-          data, assumptions, healthScore.score
+          data, assumptions, healthScore.score, abortRef.current.signal
         )
         setRationale(r)
         setInsights(i)
-      } catch (err) {
+      } catch (err: unknown) {
+        if (err instanceof Error && err.name === 'AbortError') return
         console.error('[rationale]', err)
         setRationale('')
         setInsights(EMPTY_INSIGHTS)

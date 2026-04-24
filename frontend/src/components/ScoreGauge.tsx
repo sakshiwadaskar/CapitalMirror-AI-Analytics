@@ -36,7 +36,7 @@ export function ScoreGauge({ healthScore, rationale, rationaleLoading }: Props) 
       <div className="relative">
         <RadialBarChart
           width={180} height={180} cx={90} cy={90}
-          innerRadius={60} outerRadius="80%" barSize={16}
+          innerRadius={60} outerRadius={85} barSize={16}
           data={data} startAngle={90} endAngle={-270}
         >
           <PolarAngleAxis type="number" domain={[0, 100]} angleAxisId={0} tick={false} />

@@ -236,7 +236,7 @@ async def get_rationale(req: RationaleRequest):
     )
     message = client.messages.create(
         model="claude-haiku-4-5-20251001",
-        max_tokens=512,
+        max_tokens=1024,
         temperature=0.3,
         messages=[{"role": "user", "content": prompt}],
     )

@@ -33,12 +33,14 @@ export interface RationaleResult {
 export async function fetchRationale(
   data: FinancialData,
   assumptions: Assumptions,
-  score: number
+  score: number,
+  signal?: AbortSignal
 ): Promise<RationaleResult> {
   const res = await fetch(`${BASE}/rationale`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ data, assumptions, score }),
+    signal,
   })
   if (!res.ok) throw new Error(await res.text())
   const json = await res.json()
