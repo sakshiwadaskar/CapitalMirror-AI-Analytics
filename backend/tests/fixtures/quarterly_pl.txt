@@ -1,0 +1,17 @@
+Q3 2024 — Profit & Loss
+Company: Summit Construction Co.
+
+Revenue (Q3):         $480,000
+Materials & Labour:   $312,000
+Gross Profit (Q3):    $168,000
+
+Operating Expenses (Q3):
+  Management Salaries:  $54,000
+  Equipment Lease:      $18,000
+  Insurance:             $9,600
+  Office & Admin:        $6,000
+  Total OpEx (Q3):      $87,600
+
+Net Operating Income: $80,400
+YoY Growth vs Q3 2023: +12%
+Headcount: 14
