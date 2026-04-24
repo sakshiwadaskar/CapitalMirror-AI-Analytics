@@ -17,6 +17,7 @@ const RIVERSIDE: FinancialData = {
   sde: 546_000,
   yoy_growth: 0.14,
   employee_count: 15,
+  cash_on_hand: null,
   notes: null,
   industry: 'landscaping',
 }
@@ -201,13 +202,13 @@ describe('computeHealthScore — assumption adjustments', () => {
 
 describe('computeHealthScore — null field handling', () => {
   it('handles null revenue without throwing', () => {
-    const empty: FinancialData = { business_name: null, fiscal_year: null, revenue: null, cogs: null, gross_profit: null, operating_expenses: null, owner_salary: null, rent: null, marketing: null, ebitda: null, sde: null, yoy_growth: null, employee_count: null, notes: null, industry: null }
+    const empty: FinancialData = { business_name: null, fiscal_year: null, revenue: null, cogs: null, gross_profit: null, operating_expenses: null, owner_salary: null, rent: null, marketing: null, ebitda: null, sde: null, yoy_growth: null, employee_count: null, cash_on_hand: null, notes: null, industry: null }
     expect(() => computeHealthScore(empty, DEFAULT_ASSUMPTIONS)).not.toThrow()
   })
 
   it('null revenue with negative growth produces score of 0', () => {
     // growth_rate=-0.10 pushes growth score to 0; null revenue zeroes all other components
-    const empty: FinancialData = { business_name: null, fiscal_year: null, revenue: null, cogs: null, gross_profit: null, operating_expenses: null, owner_salary: null, rent: null, marketing: null, ebitda: null, sde: null, yoy_growth: null, employee_count: null, notes: null, industry: null }
+    const empty: FinancialData = { business_name: null, fiscal_year: null, revenue: null, cogs: null, gross_profit: null, operating_expenses: null, owner_salary: null, rent: null, marketing: null, ebitda: null, sde: null, yoy_growth: null, employee_count: null, cash_on_hand: null, notes: null, industry: null }
     const { score } = computeHealthScore(empty, { ...DEFAULT_ASSUMPTIONS, growth_rate: -0.10 })
     expect(score).toBe(0)
   })

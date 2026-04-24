@@ -25,6 +25,7 @@ const DATA: FinancialData = {
   sde: 330_000,
   yoy_growth: 0.10,
   employee_count: null,
+  cash_on_hand: null,
   notes: null,
   industry: 'general',
 }
