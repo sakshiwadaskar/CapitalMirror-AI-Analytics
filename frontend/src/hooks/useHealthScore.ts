@@ -26,17 +26,21 @@ export function useHealthScore(data: FinancialData | null, assumptions: Assumpti
       return
     }
 
+    // Abort any in-flight request immediately — not inside the debounce
+    if (abortRef.current) abortRef.current.abort()
     if (debounceRef.current) clearTimeout(debounceRef.current)
 
     debounceRef.current = setTimeout(async () => {
-      if (abortRef.current) abortRef.current.abort()
-      abortRef.current = new AbortController()
+      const controller = new AbortController()
+      abortRef.current = controller
       setRationaleLoading(true)
       setRationaleError(false)
       try {
         const { rationale: r, insights: i } = await fetchRationale(
-          data, assumptions, healthScore.score, abortRef.current.signal
+          data, assumptions, healthScore.score, controller.signal
         )
+        // Ignore if a newer request has already taken over
+        if (abortRef.current !== controller) return
         setRationale(r)
         setInsights(i)
       } catch (err: unknown) {
@@ -46,7 +50,8 @@ export function useHealthScore(data: FinancialData | null, assumptions: Assumpti
         setInsights(EMPTY_INSIGHTS)
         setRationaleError(true)
       } finally {
-        setRationaleLoading(false)
+        // Only clear loading if this request is still the current one
+        if (abortRef.current === controller) setRationaleLoading(false)
       }
     }, 800)
 

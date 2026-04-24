@@ -53,9 +53,9 @@ describe('MetricCards — card presence', () => {
     expect(screen.getByText(/Expense Ratio/i)).toBeInTheDocument()
   })
 
-  it('renders Monthly Burn card', () => {
+  it('renders Monthly Costs card', () => {
     renderCards()
-    expect(screen.getByText(/Monthly Burn/i)).toBeInTheDocument()
+    expect(screen.getByText(/Monthly Costs/i)).toBeInTheDocument()
   })
 
   // Regression: EBITDA card was replaced by Monthly Burn
