@@ -103,5 +103,3 @@ YoY Revenue Growth: +14%
 Employees: 11 FT, 4 seasonal
 Notes: Lost one major HOA contract in Q4. New equipment lease starts Jan 2024.
 ```
-
-Built for the Contrarian Thinking Full Stack Engineer build exercise.
