@@ -3,11 +3,14 @@ import os
 import csv
 import json
 
+import traceback
+
 import pdfplumber
 import anthropic
 from dotenv import load_dotenv
-from fastapi import FastAPI, File, UploadFile, HTTPException
+from fastapi import FastAPI, File, UploadFile, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
 
 from models import (
     FinancialData,
@@ -28,6 +31,16 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+
+# TEMP: surfaces the real traceback in the response for debugging the Render 500.
+# Remove once the root cause is fixed.
+@app.exception_handler(Exception)
+async def debug_exception_handler(request: Request, exc: Exception):
+    return JSONResponse(
+        status_code=500,
+        content={"error": str(exc), "traceback": traceback.format_exc()},
+    )
 
 client = anthropic.Anthropic(api_key=os.environ["ANTHROPIC_API_KEY"])
 
