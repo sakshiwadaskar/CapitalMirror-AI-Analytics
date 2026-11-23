@@ -95,6 +95,25 @@ Raw financial data:
 """
 
 
+def extract_json_block(text: str) -> dict:
+    """Strip an optional ```/```json fence and parse the remaining text as a
+    single JSON object. Raises ValueError if no JSON object can be found."""
+    content = text.strip()
+    if content.startswith("```"):
+        content = content.split("```")[1]
+        if content.startswith("json"):
+            content = content[4:]
+        content = content.strip()
+    try:
+        return json.loads(content)
+    except json.JSONDecodeError:
+        start = content.find("{")
+        end = content.rfind("}") + 1
+        if start >= 0 and end > start:
+            return json.loads(content[start:end])
+        raise ValueError("No JSON object found in response")
+
+
 def call_claude_extract(raw_text: str) -> FinancialData:
     message = client.messages.create(
         model="claude-sonnet-4-6",
@@ -102,21 +121,10 @@ def call_claude_extract(raw_text: str) -> FinancialData:
         temperature=0,
         messages=[{"role": "user", "content": EXTRACT_PROMPT + raw_text}],
     )
-    content = message.content[0].text.strip()
-    if content.startswith("```"):
-        content = content.split("```")[1]
-        if content.startswith("json"):
-            content = content[4:]
-        content = content.strip()
     try:
-        parsed = json.loads(content)
-    except json.JSONDecodeError:
-        start = content.find("{")
-        end = content.rfind("}") + 1
-        if start >= 0 and end > start:
-            parsed = json.loads(content[start:end])
-        else:
-            raise HTTPException(status_code=422, detail="Could not parse financial data from input")
+        parsed = extract_json_block(message.content[0].text)
+    except (ValueError, json.JSONDecodeError):
+        raise HTTPException(status_code=422, detail="Could not parse financial data from input")
     return FinancialData(**{k: parsed.get(k) for k in FinancialData.model_fields})
 
 
@@ -240,18 +248,10 @@ async def get_rationale(req: RationaleRequest):
         temperature=0.3,
         messages=[{"role": "user", "content": prompt}],
     )
-    content = message.content[0].text.strip()
-    if content.startswith("```"):
-        content = content.split("```")[1]
-        if content.startswith("json"):
-            content = content[4:]
-        content = content.strip()
     try:
-        parsed = json.loads(content)
-    except json.JSONDecodeError:
-        start = content.find("{")
-        end = content.rfind("}") + 1
-        parsed = json.loads(content[start:end]) if start >= 0 and end > start else {}
+        parsed = extract_json_block(message.content[0].text)
+    except (ValueError, json.JSONDecodeError):
+        parsed = {}
 
     return RationaleResponse(
         rationale=parsed.get("rationale", ""),
@@ -261,3 +261,10 @@ async def get_rationale(req: RationaleRequest):
             fix_first=parsed.get("fix_first", [])[:3],
         ),
     )
+
+
+# Imported last: app.agent references `main.client` / `main.extract_json_block`
+# dynamically (see app/agent.py), which only works once both are defined above.
+from app.main import router as chat_router  # noqa: E402
+
+app.include_router(chat_router)
