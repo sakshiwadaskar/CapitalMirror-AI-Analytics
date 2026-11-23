@@ -26,6 +26,6 @@ async def notify_owner(name: str, contact: str, message: str) -> None:
             read_timeout_seconds=CALL_TIMEOUT,
         )
 
-    if result.isError:
+    if result.is_error:
         detail = result.content[0].text if result.content else "unknown error"
         raise RuntimeError(f"Pushover notify failed: {detail}")

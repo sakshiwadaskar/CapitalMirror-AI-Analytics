@@ -265,6 +265,9 @@ async def get_rationale(req: RationaleRequest):
 
 # Imported last: app.agent references `main.client` / `main.extract_json_block`
 # dynamically (see app/agent.py), which only works once both are defined above.
+import gradio as gr  # noqa: E402
+from app.gradio_ui import demo as chat_ui  # noqa: E402
 from app.main import router as chat_router  # noqa: E402
 
 app.include_router(chat_router)
+app = gr.mount_gradio_app(app, chat_ui, path="/ui")

@@ -38,4 +38,6 @@ async def notify_owner(name: str, contact: str, message: str) -> dict:
 
 
 if __name__ == "__main__":
-    mcp.run(transport="streamable-http")
+    # Default port 8000 collides with the backend's own uvicorn process —
+    # this server needs its own port.
+    mcp.run(transport="streamable-http", port=int(os.environ.get("PORT", 8001)))
